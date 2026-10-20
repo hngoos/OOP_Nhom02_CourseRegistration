@@ -1,0 +1,142 @@
+# BÀI TẬP LỚN LẬP TRÌNH HƯỚNG ĐỐI TƯỢNG (INT1332)
+
+## ĐỀ TÀI SỐ 06: HỆ THỐNG ĐĂNG KÝ HỌC PHẦN (COURSE REGISTRATION)
+
+**Nhóm thực hiện**: Nhóm 02
+**Học viện Công nghệ Bưu chính Viễn thông - Cơ sở TP. Hồ Chí Minh (PTIT)**
+
+---
+
+### THÔNG TIN NỘP ĐỒ ÁN
+- **Link Git Repository**: https://github.com/<tai-khoan-cua-ban>/OOP_Nhom02_CourseRegistration
+- **Link Video Demo**: (Dán link YouTube / Google Drive demo nếu nhóm có quay video)
+
+---
+
+### 1. CÔNG NGHỆ & MÔI TRƯỜNG PHÁT TRIỂN
+
+- **Ngôn ngữ**: Java (JDK 17 trở lên, tối thiểu Java SE 11)
+- **Giao diện**: Java Swing (JFrame, JDialog, JTable, JPanel, Graphics2D)
+- **Biểu đồ**: JFreeChart 1.5.4 (`lib/jfreechart-1.5.4.jar`)
+- **IDE khuyến nghị**: Eclipse IDE (hoặc IntelliJ IDEA / NetBeans / VS Code)
+
+---
+
+### 2. CẤU TRÚC GÓI MÃ NGUỒN (PACKAGE STRUCTURE)
+
+```text
+OOP_Nhom02_CourseRegistration/
+├── lib/
+│   └── jfreechart-1.5.4.jar               // Thư viện trực quan hóa dữ liệu JFreeChart
+├── resources/
+│   └── icons/                            // Bộ icon PNG 16x16, 32x32 cho ứng dụng
+├── src/
+│   └── vn/edu/ptit/oop/nhom02/
+│       ├── Main.java                     // Điểm vào chạy trên Event Dispatch Thread (EDT)
+│       ├── common/
+│       │   └── BaseWindow.java           // Lớp trừu tượng khung sườn bắt buộc (Mục 5)
+│       ├── model/
+│       │   ├── Person.java               // Lớp trừu tượng Person (Đóng gói & Trừu tượng)
+│       │   ├── Student.java              // Kế thừa Person, chứa thông tin SV PTIT phía Nam
+│       │   ├── Lecturer.java             // Kế thừa Person, chứa thông tin Giảng viên
+│       │   ├── Course.java               // Môn học, số tín chỉ & danh sách môn tiên quyết
+│       │   ├── TimeSlot.java             // Ca học theo buổi (Sáng: 1-4, Chiều: 7-10) & overlaps()
+│       │   └── ClassSection.java         // Lớp học phần, lớp niên chế, sĩ số, danh sách SV
+│       ├── exception/
+│       │   ├── RegistrationException.java         // Lớp ngoại lệ cha tự định nghĩa
+│       │   ├── SectionFullException.java          // Ngoại lệ lớp đầy sĩ số
+│       │   ├── ScheduleConflictException.java     // Ngoại lệ trùng lịch học
+│       │   ├── CreditLimitException.java          // Ngoại lệ vượt quá số tín chỉ tối đa
+│       │   └── PrerequisiteException.java         // Ngoại lệ chưa học môn tiên quyết
+│       ├── repository/
+│       │   ├── CourseRegistrationRepository.java  // Interface tự định nghĩa (Abstraction)
+│       │   └── InMemoryCourseRegistrationRepository.java // Dữ liệu mẫu chuẩn PTIT Cơ sở phía Nam
+│       ├── service/
+│       │   └── RegistrationService.java           // Xử lý kiểm tra đầy đủ 4 ràng buộc đăng ký
+│       ├── ui/
+│       │   ├── MainWindow.java                    // Cửa sổ chính (extends BaseWindow)
+│       │   ├── SectionTableModel.java             // TableModel tự viết kế thừa AbstractTableModel
+│       │   ├── dialogs/
+│       │   │   ├── LoginDialog.java               // Hộp thoại chọn Sinh viên / Giảng viên
+│       │   │   ├── AboutDialog.java               // Hộp thoại thông tin nhóm (Mục 4)
+│       │   │   └── ChartWindow.java               // Cửa sổ hiển thị biểu đồ (DISPOSE_ON_CLOSE)
+│       │   └── panels/
+│       │       ├── RegistrationPanel.java         // Panel đăng ký & tìm kiếm thời gian thực
+│       │       ├── TimetablePanel.java            // Tự vẽ TKB (Graphics2D) & Xuất ảnh PNG
+│       │       ├── RoleViewStrategy.java          // Interface Strategy Đa hình (BONUS)
+│       │       ├── StudentViewStrategy.java       // Giao diện Đăng ký & TKB cho Sinh viên
+│       │       └── LecturerViewStrategy.java      // Giao diện xem DS sinh viên cho Giảng viên (BONUS +5đ)
+│       └── util/
+│           └── ChartHelper.java                   // Tiện ích tạo BarChart & PieChart với font tiếng Việt
+├── OOP_Nhom02.jar                                 // File JAR thực thi chạy độc lập
+└── README.md
+```
+
+---
+
+### 3. THIẾT KẾ DỮ LIỆU & ĐẶC TẢ CA HỌC
+
+- **Lớp niên chế**: Mặc định cho lớp `D24CQAT01-N`.
+- **Cấu trúc bảng học phần**:
+  `Lớp` | `Mã Môn` | `Tên Môn Học` | `Tín Chỉ` | `Khoa/Bộ Môn` | `Giảng Viên` | `Sĩ Số` | `Lịch Học & Phòng`
+- **Quy chuẩn ca học theo buổi**:
+  - **Buổi Sáng**: Từ **Tiết 1 đến Tiết 4**
+  - **Buổi Chiều**: Từ **Tiết 7 đến Tiết 10**
+- **Dữ liệu môn học**:
+  - `INT1340` - Cấu trúc dữ liệu & Giải thuật: Thứ 2 (Tiết 1 - 4), Phòng 201-A2
+  - `INT1339` - Cơ sở dữ liệu: Thứ 3 (Tiết 1 - 4), Phòng 302-A2
+  - `BAS1203` - Giải tích 1: Thứ 4 (Tiết 1 - 4), Phòng 105-A1
+  - `INT1332` - Lập trình hướng đối tượng (yêu cầu tiên quyết `INT1154`): Thứ 5 (Tiết 1 - 4), Phòng Lab3-CNTT
+  - `INT1319` - Kiến trúc máy tính: Thứ 3 (Tiết 1 - 4), Phòng 204-A2 _(Trùng lịch sáng Thứ 3 với Cơ sở dữ liệu)_
+  - `BAS1224` - Vật lý đại cương 1: Thứ 6 (Tiết 7 - 10), Phòng 202-A1
+  - `SKD1105` - Kỹ năng mềm: Thứ 7 (Tiết 1 - 4), Phòng Hội trường 2
+  - `INT1154` - Tin học cơ sở 2: Thứ 2 (Tiết 7 - 10), Phòng Lab1-CNTT
+  - `INT1339` (Lớp đầy sĩ số 1/1): Thứ 6 (Tiết 1 - 4), Phòng 102-A2
+
+---
+
+### 4. HƯỚNG DẪN IMPORT VÀ CHẠY DỰ ÁN TRONG ECLIPSE
+
+1. Mở Eclipse IDE $\rightarrow$ **File** $\rightarrow$ **Open Projects from File System...**
+2. Nhấn nút **Directory...** $\rightarrow$ Trỏ tới thư mục `OOP_Nhom02_CourseRegistration`.
+3. Nhấn **Finish**.
+4. **Cấu hình thư viện JFreeChart trong Eclipse**:
+   - Chuột phải vào tên Project `OOP_Nhom02_CourseRegistration` $\rightarrow$ **Properties**.
+   - Chọn mục **Java Build Path** $\rightarrow$ Thẻ **Libraries**.
+   - Chọn mục **Classpath** $\rightarrow$ Nhấn nút **Add External JARs...**
+   - Trỏ tới file `lib/jfreechart-1.5.4.jar` trong thư mục dự án.
+   - Nhấn **Apply and Close**.
+5. Mở file `src/vn/edu/ptit/oop/nhom02/Main.java` $\rightarrow$ Chuột phải chọn **Run As** $\rightarrow$ **Java Application**.
+
+_(Hoặc chạy trực tiếp file JAR bằng dòng lệnh: `java -jar OOP_Nhom02.jar`)_
+
+---
+
+### 5. KỊCH BẢN DEMO THUYẾT TRÌNH BẮT BUỘC (ĐẠT ĐIỂM TỐI ĐA)
+
+Thực hiện theo đúng quy trình 7 bước giảng viên yêu cầu trong thẻ đề bài:
+
+1. **Bước 1 - Đăng nhập Sinh viên**:
+   - Khi ứng dụng khởi động, chọn vai trò **Sinh viên** $\rightarrow$ chọn tài khoản sinh viên đã qua môn tiên quyết (ví dụ: `Nguyễn Văn A - N24DCAT001`) $\rightarrow$ bấm **Đăng nhập**.
+2. **Bước 2 - Đăng ký thành công 3 môn học phần hợp lệ**:
+   - Chọn môn `INT1340 - Cấu trúc dữ liệu` $\rightarrow$ bấm nút **Đăng ký học phần**.
+   - Chọn môn `INT1339 - Cơ sở dữ liệu` $\rightarrow$ bấm nút **Đăng ký học phần**.
+   - Chọn môn `BAS1203 - Giải tích 1` $\rightarrow$ bấm nút **Đăng ký học phần**.
+   - Bảng kết quả bên dưới và thanh trạng thái (Status bar) ở đáy cập nhật tổng số tín chỉ hiện có (9 / 24 TC).
+3. **Bước 3 - Demo bắt lỗi TRÙNG LỊCH HỌC**:
+   - Chọn môn `INT1319 - Kiến trúc máy tính` (học Thứ 3 Tiết 1 - 4, trùng ca sáng Thứ 3 với môn Cơ sở dữ liệu vừa đăng ký).
+   - Bấm nút **Đăng ký học phần** $\rightarrow$ Hệ thống bắt ngoại lệ và bung thông báo: `[ScheduleConflictException]: Trùng lịch học! Lớp 'HP05' bị trùng thời gian với lớp 'HP02' đã đăng ký`.
+4. **Bước 4 - Demo bắt lỗi THIẾU TIÊN QUYẾT**:
+   - Trên Toolbar, bấm nút **"Đổi tài khoản"**.
+   - Chọn tài khoản sinh viên **chưa hoàn thành môn Tin học cơ sở 2** (ví dụ: `Trần Minh B - N24DCAT010`).
+   - Chọn môn `INT1332 - Lập trình hướng đối tượng`.
+   - Bấm **Đăng ký học phần** $\rightarrow$ Hệ thống bung thông báo: `[PrerequisiteException]: Chưa thỏa mãn điều kiện tiên quyết cho môn 'INT1332'! Cần hoàn thành các môn: INT1154`.
+5. **Bước 5 - Xem Thời khóa biểu tự vẽ**:
+   - Chuyển sang tab **"Thời Khóa Biểu Tuần"**: Quan sát lưới ma trận tuần 7 cột $\times$ 12 tiết được vẽ trực quan bằng `Graphics2D`. Môn học phủ trọn buổi (Tiết 1-4 hoặc Tiết 7-10), có màu sắc nổi bật, hiển thị tên môn, phòng học, tiết học.
+6. **Bước 6 - Xuất Thời khóa biểu ra ảnh PNG**:
+   - Bấm nút **"Xuất TKB ra ảnh PNG"** $\rightarrow$ Chọn nơi lưu file trên máy $\rightarrow$ Kiểm tra file ảnh đã được xuất thành công, rõ nét.
+7. **Bước 7 - Mở Biểu đồ JFreeChart & Demo Chế độ Giảng viên (BONUS +5đ)**:
+   - Trên Toolbar, bấm nút **"Biểu đồ thống kê"** $\rightarrow$ Cửa sổ `ChartWindow` mở ra gồm:
+     - Tab 1: **BarChart** tỷ lệ lấp đầy các môn học phần theo Mã môn học.
+     - Tab 2: **PieChart** phân bố số tín chỉ sinh viên đã đăng ký theo khối kiến thức.
+   - **Demo BONUS Giảng viên**: Bấm **"Đổi tài khoản"** $\rightarrow$ Chọn vai trò **Giảng viên** $\rightarrow$ Chọn giảng viên bất kỳ (ví dụ: `TS. Lê Văn Tuấn`) $\rightarrow$ Giao diện tự động chuyển đổi bằng nguyên lý **Đa hình (Polymorphism)** sang màn hình Quản lý lớp giảng dạy và xem danh sách sinh viên ghi danh trong lớp của giảng viên đó.
