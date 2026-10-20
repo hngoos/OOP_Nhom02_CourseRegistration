@@ -1,0 +1,220 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam monochrome false
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 12
+skinparam roundCorner 8
+
+title SƠ ĐỒ LỚP UML (CLASS DIAGRAM) - HỆ THỐNG ĐĂNG KÝ HỌC PHẦN (NHÓM 02 - PTIT)
+
+package "vn.edu.ptit.oop.nhom02.model" {
+    abstract class Person {
+        - id: String
+        - fullName: String
+        - email: String
+        + Person(id: String, fullName: String, email: String)
+        + {abstract} getRoleDescription(): String
+        + getId(): String
+        + getFullName(): String
+        + getEmail(): String
+        + setFullName(name: String): void
+        + setEmail(email: String): void
+    }
+
+    class Student {
+        - major: String
+        - cohort: String
+        - maxCredits: int
+        - passedCourses: List<String>
+        + Student(id: String, fullName: String, email: String, major: String, cohort: String)
+        + getRoleDescription(): String
+        + addPassedCourse(courseCode: String): void
+        + hasPassed(courseCode: String): boolean
+        + getPassedCourses(): List<String>
+        + getMaxCredits(): int
+    }
+
+    class Lecturer {
+        - degree: String
+        - department: String
+        + Lecturer(id: String, fullName: String, email: String, degree: String, department: String)
+        + getRoleDescription(): String
+        + getDegree(): String
+        + getDepartment(): String
+    }
+
+    enum KnowledgeBlock {
+        GENERAL
+        FUNDAMENTAL
+        SPECIALIZED
+        - displayName: String
+        + getDisplayName(): String
+    }
+
+    class Course {
+        - code: String
+        - name: String
+        - credits: int
+        - block: KnowledgeBlock
+        - prerequisiteCodes: List<String>
+        + Course(code: String, name: String, credits: int, block: KnowledgeBlock, prereqs: List<String>)
+        + getCode(): String
+        + getName(): String
+        + getCredits(): int
+        + getBlock(): KnowledgeBlock
+        + getPrerequisiteCodes(): List<String>
+    }
+
+    class TimeSlot {
+        - dayOfWeek: int
+        - startPeriod: int
+        - endPeriod: int
+        - room: String
+        + TimeSlot(dayOfWeek: int, startPeriod: int, endPeriod: int, room: String)
+        + overlaps(other: TimeSlot): boolean
+        + getDayOfWeek(): int
+        + getStartPeriod(): int
+        + getEndPeriod(): int
+        + getRoom(): String
+    }
+
+    class ClassSection {
+        - sectionId: String
+        - capacity: int
+        - course: Course
+        - lecturer: Lecturer
+        - timeSlots: List<TimeSlot>
+        - enrolledStudents: List<Student>
+        + ClassSection(sectionId: String, course: Course, lecturer: Lecturer, capacity: int, slots: List<TimeSlot>)
+        + isFull(): boolean
+        + enroll(student: Student): boolean
+        + cancelEnrollment(student: Student): boolean
+        + conflictsWith(other: ClassSection): boolean
+        + getEnrolledCount(): int
+        + getFillRate(): double
+        + getTimeSlotsSummary(): String
+    }
+
+    class Enrollment {
+        - student: Student
+        - classSection: ClassSection
+        - enrolledAt: LocalDateTime
+        + Enrollment(student: Student, classSection: ClassSection)
+        + getFormattedDate(): String
+    }
+}
+
+package "vn.edu.ptit.oop.nhom02.exception" {
+    class RegistrationException {
+        + RegistrationException(message: String)
+    }
+    class SectionFullException {
+        - sectionId: String
+        - capacity: int
+    }
+    class ScheduleConflictException {
+        - targetSectionId: String
+        - conflictingSectionId: String
+        - conflictDetails: String
+    }
+    class CreditLimitException {
+        - currentCredits: int
+        - additionalCredits: int
+        - maxCredits: int
+    }
+    class PrerequisiteException {
+        - courseName: String
+        - missingPrereq: String
+    }
+}
+
+package "vn.edu.ptit.oop.nhom02.service" {
+    class RegistrationService {
+        - studentRegistrations: Map<String, List<ClassSection>>
+        + register(student: Student, targetSection: ClassSection): void
+        + cancelRegistration(student: Student, section: ClassSection): void
+        + getRegisteredSections(student: Student): List<ClassSection>
+        + calculateTotalCredits(student: Student): int
+    }
+}
+
+package "vn.edu.ptit.oop.nhom02.repository" {
+    interface DataRepository {
+        + getAllStudents(): List<Student>
+        + findStudentById(id: String): Student
+        + getAllLecturers(): List<Lecturer>
+        + getAllCourses(): List<Course>
+        + getAllSections(): List<ClassSection>
+        + findSectionById(id: String): ClassSection
+    }
+    class InMemoryDataRepository implements DataRepository {
+        - students: Map<String, Student>
+        - lecturers: Map<String, Lecturer>
+        - courses: Map<String, Course>
+        - sections: Map<String, ClassSection>
+        - initMockData(): void
+    }
+}
+
+package "vn.edu.ptit.oop.nhom02.ui.strategy" {
+    interface RoleViewStrategy {
+        + createView(mainWindow: MainWindow, person: Person): JPanel
+        + refreshView(): void
+    }
+    class StudentViewStrategy implements RoleViewStrategy
+    class LecturerViewStrategy implements RoleViewStrategy
+}
+
+package "vn.edu.ptit.oop.nhom02.common" {
+    abstract class BaseWindow {
+        # menuBar: JMenuBar
+        # toolBar: JToolBar
+        # statusBar: JPanel
+        # statusLabel: JLabel
+        + BaseWindow(title: String, width: int, height: int)
+        # {abstract} initUI(): void
+        # showAbout(): void
+        + setStatus(msg: String): void
+    }
+}
+
+package "vn.edu.ptit.oop.nhom02.ui" {
+    class MainWindow extends BaseWindow {
+        - repo: DataRepository
+        - registrationService: RegistrationService
+        - currentUser: Person
+        - roleStrategy: RoleViewStrategy
+        # initUI(): void
+        + switchRoleView(person: Person): void
+        + updateStatusBarCredits(student: Student): void
+        + openLoginDialog(): void
+        + openChartWindow(): void
+    }
+}
+
+Person <|-- Student
+Person <|-- Lecturer
+
+RegistrationException <|-- SectionFullException
+RegistrationException <|-- ScheduleConflictException
+RegistrationException <|-- CreditLimitException
+RegistrationException <|-- PrerequisiteException
+
+ClassSection "1" *-- "1..*" TimeSlot : Composition
+ClassSection "1" o-- "1" Course : Aggregation
+ClassSection "1" o-- "1" Lecturer : Aggregation
+ClassSection "1" o-- "*" Student : Enrolled
+Enrollment --> Student
+Enrollment --> ClassSection
+Course o-- KnowledgeBlock
+
+RegistrationService ..> RegistrationException : throws
+RegistrationService --> ClassSection
+RegistrationService --> Student
+
+MainWindow o-- DataRepository
+MainWindow o-- RegistrationService
+MainWindow *-- RoleViewStrategy
+
+@enduml
