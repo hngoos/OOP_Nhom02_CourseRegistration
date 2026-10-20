@@ -1,13 +1,8 @@
 package vn.edu.ptit.oop.nhom02.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 import vn.edu.ptit.oop.nhom02.common.BaseWindow;
 import vn.edu.ptit.oop.nhom02.model.ClassSection;
 import vn.edu.ptit.oop.nhom02.model.Lecturer;
