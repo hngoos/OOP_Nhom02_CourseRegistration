@@ -8,8 +8,7 @@
 ---
 
 ### THÔNG TIN NỘP ĐỒ ÁN
-- **Link Git Repository**: https://github.com/<tai-khoan-cua-ban>/OOP_Nhom02_CourseRegistration
-- **Link Video Demo**: (Dán link YouTube / Google Drive demo nếu nhóm có quay video)
+- **Link Git Repository**: https://github.com/hngoos/OOP_Nhom02_CourseRegistration
 
 ---
 
@@ -26,6 +25,9 @@
 
 ```text
 OOP_Nhom02_CourseRegistration/
+├── docs/
+│   ├── UML_ClassDiagram.png               // Sơ đồ lớp UML xuất ra ảnh độ nét cao (4016x1913)
+│   └── UML_ClassDiagram.puml              // Mã nguồn mô hình hóa PlantUML
 ├── lib/
 │   └── jfreechart-1.5.4.jar               // Thư viện trực quan hóa dữ liệu JFreeChart
 ├── resources/
