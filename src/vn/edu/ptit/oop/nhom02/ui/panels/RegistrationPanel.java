@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
@@ -45,6 +46,7 @@ public class RegistrationPanel extends JPanel {
     private SectionTableModel registeredTableModel;
     private JTable registeredTable;
 
+    private JComboBox<String> cbRegistrationType;
     private JComboBox<String> cbFacultyFilter;
     private JTextField txtSearch;
     private JLabel lblRegisteredSummary;
@@ -63,13 +65,22 @@ public class RegistrationPanel extends JPanel {
         JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
         filterPanel.setBorder(BorderFactory.createTitledBorder("Bộ lọc & Tìm kiếm lớp học phần"));
 
+        filterPanel.add(new JLabel("Mục đăng ký:"));
+        cbRegistrationType = new JComboBox<>(new String[]{
+            "Đăng ký theo kế hoạch",
+            "Đăng ký môn nguyện vọng"
+        });
+        cbRegistrationType.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        cbRegistrationType.setPreferredSize(new Dimension(200, 26));
+        filterPanel.add(cbRegistrationType);
+
         filterPanel.add(new JLabel("Khoa/Bộ môn:"));
-        cbFacultyFilter = new JComboBox<>(new String[]{"Tất cả", "CNTT", "Khoa học Cơ bản", "Kỹ năng"});
+        cbFacultyFilter = new JComboBox<>(new String[]{"Tất cả", "CNTT", "Khoa học Cơ bản", "Kỹ năng", "An toàn Thông tin"});
         cbFacultyFilter.setPreferredSize(new Dimension(140, 26));
         filterPanel.add(cbFacultyFilter);
 
         filterPanel.add(new JLabel("Từ khóa tìm kiếm:"));
-        txtSearch = new JTextField(20);
+        txtSearch = new JTextField(15);
         txtSearch.setToolTipText("Tìm theo mã lớp, mã môn, tên môn hoặc giảng viên...");
         filterPanel.add(txtSearch);
 
@@ -137,7 +148,10 @@ public class RegistrationPanel extends JPanel {
         txtSearch.getDocument().addDocumentListener(searchListener);
         cbFacultyFilter.addActionListener(e -> applyFilter());
 
+        cbRegistrationType.addActionListener(e -> applyFilter());
+
         btnClear.addActionListener(e -> {
+            if (cbRegistrationType != null) cbRegistrationType.setSelectedIndex(0);
             cbFacultyFilter.setSelectedIndex(0);
             txtSearch.setText("");
         });
@@ -152,29 +166,41 @@ public class RegistrationPanel extends JPanel {
     private void applyFilter() {
         String kw = txtSearch.getText().trim();
         String faculty = (String) cbFacultyFilter.getSelectedItem();
+        int regTypeIndex = (cbRegistrationType != null) ? cbRegistrationType.getSelectedIndex() : 0;
 
-        RowFilter<SectionTableModel, Object> rf;
         try {
-            RowFilter<SectionTableModel, Object> textFilter = null;
-            if (!kw.isEmpty()) {
-                textFilter = RowFilter.regexFilter("(?i)" + Pattern.quote(kw), 0, 1, 2, 5);
+            List<RowFilter<SectionTableModel, Object>> filters = new ArrayList<>();
+
+            // 1. Đăng ký theo kế hoạch (chỉ hiện môn năm đó) vs Môn nguyện vọng (hiện tất cả môn)
+            if (regTypeIndex == 0 && mainWindow.getCurrentUser() instanceof Student) {
+                Student s = (Student) mainWindow.getCurrentUser();
+                String cohort = s.getCohort();
+                String cohortPrefix = "D24";
+                if (cohort.contains("D26")) {
+                    cohortPrefix = "D26";
+                } else if (cohort.contains("D25")) {
+                    cohortPrefix = "D25";
+                } else if (cohort.contains("D24")) {
+                    cohortPrefix = "D24";
+                }
+                filters.add(RowFilter.regexFilter("^" + Pattern.quote(cohortPrefix), 0));
             }
 
-            RowFilter<SectionTableModel, Object> facultyFilter = null;
+            // 2. Lọc theo Khoa/Bộ môn
             if (faculty != null && !faculty.equals("Tất cả")) {
-                facultyFilter = RowFilter.regexFilter("(?i)" + Pattern.quote(faculty), 4);
+                filters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(faculty), 4));
             }
 
-            if (textFilter != null && facultyFilter != null) {
-                rf = RowFilter.andFilter(List.of(textFilter, facultyFilter));
-            } else if (textFilter != null) {
-                rf = textFilter;
-            } else if (facultyFilter != null) {
-                rf = facultyFilter;
-            } else {
-                rf = null;
+            // 3. Lọc theo từ khóa tìm kiếm (Mã lớp, mã môn, tên môn, giảng viên)
+            if (!kw.isEmpty()) {
+                filters.add(RowFilter.regexFilter("(?i)" + Pattern.quote(kw), 0, 1, 2, 5));
             }
-            sorter.setRowFilter(rf);
+
+            if (filters.isEmpty()) {
+                sorter.setRowFilter(null);
+            } else {
+                sorter.setRowFilter(RowFilter.andFilter(filters));
+            }
         } catch (Exception ex) {
             sorter.setRowFilter(null);
         }
@@ -261,6 +287,7 @@ public class RegistrationPanel extends JPanel {
 
     public void refreshData() {
         availableTableModel.setSections(repository.findAllSections());
+        applyFilter();
 
         if (mainWindow.getCurrentUser() instanceof Student) {
             Student s = (Student) mainWindow.getCurrentUser();
