@@ -145,7 +145,7 @@ Thực hiện theo đúng quy trình 7 bước giảng viên yêu cầu trong th
    - Bảng kết quả bên dưới và thanh trạng thái (Status bar) ở đáy cập nhật tổng số tín chỉ hiện có (9 TC, kèm cảnh báo chưa đạt mức tối thiểu 14 TC).
 3. **Bước 3 - Demo bắt lỗi TRÙNG LỊCH HỌC**:
    - Chọn môn `INT1319 - Kiến trúc máy tính` (học Thứ 3 Tiết 1 - 4, trùng ca sáng Thứ 3 với môn Cơ sở dữ liệu vừa đăng ký).
-   - Bấm nút **Đăng ký học phần** $\rightarrow$ Hệ thống bắt ngoại lệ và bung thông báo: `[ScheduleConflictException]: Trùng lịch học! Lớp 'HP05' bị trùng thời gian với lớp 'HP02' đã đăng ký`.
+   - Bấm nút **Đăng ký học phần** $\rightarrow$ Hệ thống bắt ngoại lệ và bung thông báo: `Trùng lịch học! Môn 'INT1319' bị trùng thời gian với môn 'INT1339' đã đăng ký`, kèm chi tiết ca học.
 4. **Bước 4 - Demo bắt lỗi THIẾU TIÊN QUYẾT**:
    - Trên Toolbar, bấm nút **"Đổi tài khoản"**.
    - Chọn tài khoản sinh viên **chưa hoàn thành môn Tin học cơ sở 2**: `Lê Thị C - N26DCAT016`.
