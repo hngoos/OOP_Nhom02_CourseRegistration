@@ -89,12 +89,8 @@ public class ChartHelper {
             }
         }
 
-        if (facultyCredits.isEmpty()) {
-            dataset.setValue("Chưa đăng ký môn nào", 1);
-        } else {
-            for (Map.Entry<String, Integer> entry : facultyCredits.entrySet()) {
-                dataset.setValue(entry.getKey(), entry.getValue());
-            }
+        for (Map.Entry<String, Integer> entry : facultyCredits.entrySet()) {
+            dataset.setValue(entry.getKey(), entry.getValue());
         }
 
         String studentName = (student != null) ? student.getFullName() : "";
@@ -110,6 +106,8 @@ public class ChartHelper {
         PiePlot<String> plot = (PiePlot<String>) chart.getPlot();
         plot.setBackgroundPaint(new Color(248, 250, 252));
         plot.setOutlineVisible(false);
+        plot.setNoDataMessage("Chưa đăng ký môn nào");
+        plot.setNoDataMessageFont(new Font("Segoe UI", Font.PLAIN, 13));
 
         // Hiển thị rõ ràng tên khoa, số tín chỉ và phần trăm chính xác (Ví dụ: CNTT: 9 TC (60.0%))
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}: {1} TC ({2})"));

@@ -8,14 +8,13 @@
 ---
 
 ### THÔNG TIN NỘP ĐỒ ÁN
-- **Link Git Repository**: https://github.com/<tai-khoan-cua-ban>/OOP_Nhom02_CourseRegistration
-- **Link Video Demo**: (Dán link YouTube / Google Drive demo nếu nhóm có quay video)
+- **Link Git Repository**: https://github.com/hngoos/OOP_Nhom02_CourseRegistration
 
 ---
 
 ### 1. CÔNG NGHỆ & MÔI TRƯỜNG PHÁT TRIỂN
 
-- **Ngôn ngữ**: Java (JDK 17 trở lên, tối thiểu Java SE 11)
+- **Ngôn ngữ**: Java (JDK 17 trở lên để biên dịch; Java 17 trở lên để chạy JAR)
 - **Giao diện**: Java Swing (JFrame, JDialog, JTable, JPanel, Graphics2D)
 - **Biểu đồ**: JFreeChart 1.5.4 (`lib/jfreechart-1.5.4.jar`)
 - **IDE khuyến nghị**: Eclipse IDE (hoặc IntelliJ IDEA / NetBeans / VS Code)
@@ -26,6 +25,9 @@
 
 ```text
 OOP_Nhom02_CourseRegistration/
+├── docs/
+│   ├── UML_ClassDiagram.png               // Sơ đồ lớp UML xuất ra ảnh độ nét cao (4016x1913)
+│   └── UML_ClassDiagram.puml              // Mã nguồn mô hình hóa PlantUML
 ├── lib/
 │   └── jfreechart-1.5.4.jar               // Thư viện trực quan hóa dữ liệu JFreeChart
 ├── resources/
@@ -68,7 +70,9 @@ OOP_Nhom02_CourseRegistration/
 │       │       └── LecturerViewStrategy.java      // Giao diện xem DS sinh viên cho Giảng viên (BONUS +5đ)
 │       └── util/
 │           └── ChartHelper.java                   // Tiện ích tạo BarChart & PieChart với font tiếng Việt
-├── OOP_Nhom02.jar                                 // File JAR thực thi chạy độc lập
+├── build.ps1                                     // Biên dịch Java 17 và đóng gói JAR
+├── run.bat                                       // Khởi động ứng dụng trên Windows
+├── OOP_Nhom02.jar                                 // JAR thực thi, dùng kèm thư mục lib/
 └── README.md
 ```
 
@@ -76,7 +80,7 @@ OOP_Nhom02_CourseRegistration/
 
 ### 3. THIẾT KẾ DỮ LIỆU & ĐẶC TẢ CA HỌC
 
-- **Lớp niên chế**: Mặc định cho lớp `D24CQAT01-N`.
+- **Lớp niên chế**: `D26CQAT01-N` (năm 1), `D25CQAT01-N` (năm 2) và `D24CQAT01-N` (năm 3).
 - **Cấu trúc bảng học phần**:
   `Lớp` | `Mã Môn` | `Tên Môn Học` | `Tín Chỉ` | `Khoa/Bộ Môn` | `Giảng Viên` | `Sĩ Số` | `Lịch Học & Phòng`
 - **Quy chuẩn ca học theo buổi**:
@@ -89,9 +93,15 @@ OOP_Nhom02_CourseRegistration/
   - `INT1332` - Lập trình hướng đối tượng (yêu cầu tiên quyết `INT1154`): Thứ 5 (Tiết 1 - 4), Phòng Lab3-CNTT
   - `INT1319` - Kiến trúc máy tính: Thứ 3 (Tiết 1 - 4), Phòng 204-A2 _(Trùng lịch sáng Thứ 3 với Cơ sở dữ liệu)_
   - `BAS1224` - Vật lý đại cương 1: Thứ 6 (Tiết 7 - 10), Phòng 202-A1
-  - `SKD1105` - Kỹ năng mềm: Thứ 7 (Tiết 1 - 4), Phòng Hội trường 2
+  - `SKD1105` - Kỹ năng thuyết trình: Thứ 7 (Tiết 1 - 4), Phòng Hội trường 2
   - `INT1154` - Tin học cơ sở 2: Thứ 2 (Tiết 7 - 10), Phòng Lab1-CNTT
   - `INT1339` (Lớp đầy sĩ số 1/1): Thứ 6 (Tiết 1 - 4), Phòng 102-A2
+
+Dữ liệu hiện có **20 môn học, 21 lớp học phần, 5 giảng viên**. Năm môn chuyên ngành mới gồm Cơ sở an toàn thông tin (`INT1370`), Mật mã học cơ sở (`INT1372`), An toàn mạng máy tính (`INT1442`), Lập trình mạng (`INT1445`) và Đánh giá an toàn hệ thống (`INT1460`). Các môn có điều kiện tiên quyết tương ứng; đăng ký một môn trong học kỳ hiện tại không đồng nghĩa đã hoàn thành môn đó.
+
+Trong **Mục đăng ký**, chọn **Đăng ký theo kế hoạch** để xem các lớp thuộc khóa đang đăng nhập: năm 1 có 6 lớp, năm 2 có 7 lớp, năm 3 có 8 lớp. Chọn **Đăng ký môn nguyện vọng** để xem toàn bộ 21 lớp, kết hợp bộ lọc khoa/bộ môn và từ khóa. Cả hai chế độ đều kiểm tra sĩ số, trùng lịch, giới hạn tín chỉ và môn tiên quyết khi đăng ký. Nút **Xóa bộ lọc** đưa về chế độ theo kế hoạch.
+
+Ba tài khoản sinh viên mẫu là `N24DCAT001` (năm 3), `N25DCAT010` (năm 2) và `N26DCAT016` (năm 1). Mỗi tài khoản có giới hạn đăng ký 35 tín chỉ trong dữ liệu mẫu; giao diện cảnh báo khi chưa đủ 14 tín chỉ hoặc vượt 25 tín chỉ. `RegistrationService` vẫn chặn đăng ký vượt giới hạn riêng của từng sinh viên.
 
 ---
 
@@ -108,7 +118,16 @@ OOP_Nhom02_CourseRegistration/
    - Nhấn **Apply and Close**.
 5. Mở file `src/vn/edu/ptit/oop/nhom02/Main.java` $\rightarrow$ Chuột phải chọn **Run As** $\rightarrow$ **Java Application**.
 
-_(Hoặc chạy trực tiếp file JAR bằng dòng lệnh: `java -jar OOP_Nhom02.jar`)_
+### 4.1. BIÊN DỊCH VÀ CHẠY TRÊN WINDOWS
+
+Mở PowerShell tại thư mục gốc của dự án, với JDK 17 trở lên đã có trong `PATH`:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\build.ps1
+java -jar .\OOP_Nhom02.jar
+```
+
+Script tạo JAR mới từ toàn bộ mã nguồn và icon, với manifest khai báo `Class-Path: lib/jfreechart-1.5.4.jar`. Giữ thư mục `lib` cùng cấp với `OOP_Nhom02.jar` để chức năng biểu đồ hoạt động. Sau khi có JAR, có thể nhấp đúp `run.bat` để mở ứng dụng; không cần mở PowerShell đúng thư mục khi dùng `run.bat`.
 
 ---
 
@@ -117,21 +136,24 @@ _(Hoặc chạy trực tiếp file JAR bằng dòng lệnh: `java -jar OOP_Nhom0
 Thực hiện theo đúng quy trình 7 bước giảng viên yêu cầu trong thẻ đề bài:
 
 1. **Bước 1 - Đăng nhập Sinh viên**:
-   - Khi ứng dụng khởi động, chọn vai trò **Sinh viên** $\rightarrow$ chọn tài khoản sinh viên đã qua môn tiên quyết (ví dụ: `Nguyễn Văn A - N24DCAT001`) $\rightarrow$ bấm **Đăng nhập**.
+   - Khi ứng dụng khởi động, chọn vai trò **Sinh viên** $\rightarrow$ chọn `Trần Minh B - N25DCAT010` (đã hoàn thành `INT1154`) $\rightarrow$ bấm **Đăng nhập**.
+   - Chọn **Đăng ký môn nguyện vọng** để thấy cả môn năm 1 và năm 2 trong kịch bản dưới đây.
 2. **Bước 2 - Đăng ký thành công 3 môn học phần hợp lệ**:
    - Chọn môn `INT1340 - Cấu trúc dữ liệu` $\rightarrow$ bấm nút **Đăng ký học phần**.
    - Chọn môn `INT1339 - Cơ sở dữ liệu` $\rightarrow$ bấm nút **Đăng ký học phần**.
    - Chọn môn `BAS1203 - Giải tích 1` $\rightarrow$ bấm nút **Đăng ký học phần**.
-   - Bảng kết quả bên dưới và thanh trạng thái (Status bar) ở đáy cập nhật tổng số tín chỉ hiện có (9 / 24 TC).
+   - Bảng kết quả bên dưới và thanh trạng thái (Status bar) ở đáy cập nhật tổng số tín chỉ hiện có (9 TC, kèm cảnh báo chưa đạt mức tối thiểu 14 TC).
 3. **Bước 3 - Demo bắt lỗi TRÙNG LỊCH HỌC**:
    - Chọn môn `INT1319 - Kiến trúc máy tính` (học Thứ 3 Tiết 1 - 4, trùng ca sáng Thứ 3 với môn Cơ sở dữ liệu vừa đăng ký).
-   - Bấm nút **Đăng ký học phần** $\rightarrow$ Hệ thống bắt ngoại lệ và bung thông báo: `[ScheduleConflictException]: Trùng lịch học! Lớp 'HP05' bị trùng thời gian với lớp 'HP02' đã đăng ký`.
+   - Bấm nút **Đăng ký học phần** $\rightarrow$ Hệ thống bắt ngoại lệ và bung thông báo: `Trùng lịch học! Môn 'INT1319' bị trùng thời gian với môn 'INT1339' đã đăng ký`, kèm chi tiết ca học.
 4. **Bước 4 - Demo bắt lỗi THIẾU TIÊN QUYẾT**:
    - Trên Toolbar, bấm nút **"Đổi tài khoản"**.
-   - Chọn tài khoản sinh viên **chưa hoàn thành môn Tin học cơ sở 2** (ví dụ: `Trần Minh B - N24DCAT010`).
+   - Chọn tài khoản sinh viên **chưa hoàn thành môn Tin học cơ sở 2**: `Lê Thị C - N26DCAT016`.
+   - Chọn lại **Đăng ký môn nguyện vọng** để thấy môn Lập trình hướng đối tượng thuộc năm 2.
    - Chọn môn `INT1332 - Lập trình hướng đối tượng`.
    - Bấm **Đăng ký học phần** $\rightarrow$ Hệ thống bung thông báo: `[PrerequisiteException]: Chưa thỏa mãn điều kiện tiên quyết cho môn 'INT1332'! Cần hoàn thành các môn: INT1154`.
 5. **Bước 5 - Xem Thời khóa biểu tự vẽ**:
+   - Đổi lại tài khoản `N25DCAT010` để xem các môn đã đăng ký ở bước 2.
    - Chuyển sang tab **"Thời Khóa Biểu Tuần"**: Quan sát lưới ma trận tuần 7 cột $\times$ 12 tiết được vẽ trực quan bằng `Graphics2D`. Môn học phủ trọn buổi (Tiết 1-4 hoặc Tiết 7-10), có màu sắc nổi bật, hiển thị tên môn, phòng học, tiết học.
 6. **Bước 6 - Xuất Thời khóa biểu ra ảnh PNG**:
    - Bấm nút **"Xuất TKB ra ảnh PNG"** $\rightarrow$ Chọn nơi lưu file trên máy $\rightarrow$ Kiểm tra file ảnh đã được xuất thành công, rõ nét.
@@ -139,4 +161,5 @@ Thực hiện theo đúng quy trình 7 bước giảng viên yêu cầu trong th
    - Trên Toolbar, bấm nút **"Biểu đồ thống kê"** $\rightarrow$ Cửa sổ `ChartWindow` mở ra gồm:
      - Tab 1: **BarChart** tỷ lệ lấp đầy các môn học phần theo Mã môn học.
      - Tab 2: **PieChart** phân bố số tín chỉ sinh viên đã đăng ký theo khối kiến thức.
+       Nhãn và tooltip hiển thị tên khoa, số tín chỉ và tỷ lệ phần trăm. Để xem dữ liệu của bước 2, đổi về `N25DCAT010` trước khi mở biểu đồ.
    - **Demo BONUS Giảng viên**: Bấm **"Đổi tài khoản"** $\rightarrow$ Chọn vai trò **Giảng viên** $\rightarrow$ Chọn giảng viên bất kỳ (ví dụ: `TS. Lê Văn Tuấn`) $\rightarrow$ Giao diện tự động chuyển đổi bằng nguyên lý **Đa hình (Polymorphism)** sang màn hình Quản lý lớp giảng dạy và xem danh sách sinh viên ghi danh trong lớp của giảng viên đó.
