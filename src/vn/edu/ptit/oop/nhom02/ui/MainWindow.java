@@ -111,7 +111,7 @@ public class MainWindow extends BaseWindow {
             } else {
                 statusNote = "(Cảnh báo: Vượt quá giới hạn tối đa 25 tín chỉ)";
             }
-            setStatus("Sinh viên: " + s.getFullName() + " | Đã đăng ký: " + credits + "/" + s.getMaxCredits() + " Tín chỉ " + statusNote);
+            setStatus("Sinh viên: " + s.getFullName() + " | Đã đăng ký: " + credits + " Tín chỉ " + statusNote);
         } else if (currentUser != null) {
             setStatus("Giảng viên: " + currentUser.getFullName() + " | Khoa: " + ((Lecturer) currentUser).getDepartment());
         }

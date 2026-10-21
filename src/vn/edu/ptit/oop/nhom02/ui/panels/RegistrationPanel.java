@@ -206,9 +206,17 @@ public class RegistrationPanel extends JPanel {
 
             registrationService.register(student, sectionToEnroll, registeredList);
 
-            JOptionPane.showMessageDialog(this,
-                "Đăng ký thành công lớp '" + sectionToEnroll.getSectionId() + "' - " + sectionToEnroll.getCourse().getName() + "!",
-                "Thành công", JOptionPane.INFORMATION_MESSAGE);
+            int totalCredits = registrationService.calculateEnrolledCredits(student, registeredList);
+            if (totalCredits > 25) {
+                JOptionPane.showMessageDialog(this,
+                    "Đăng ký thành công lớp '" + sectionToEnroll.getSectionId() + "' - " + sectionToEnroll.getCourse().getName() + "!\n" +
+                    "⚠️ CẢNH BÁO: Tổng số tín chỉ hiện tại là " + totalCredits + " TC (Vượt quá giới hạn tối đa 25 TC theo quy chế)!",
+                    "Cảnh báo học vụ", JOptionPane.WARNING_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "Đăng ký thành công lớp '" + sectionToEnroll.getSectionId() + "' - " + sectionToEnroll.getCourse().getName() + "!",
+                    "Thành công", JOptionPane.INFORMATION_MESSAGE);
+            }
 
             refreshData();
             mainWindow.updateStatusBar();
@@ -260,11 +268,20 @@ public class RegistrationPanel extends JPanel {
             registeredTableModel.setSections(mySections);
 
             int totalCredits = registrationService.calculateEnrolledCredits(s, mySections);
-            String note = (totalCredits < 14) ? " (Cảnh báo: Chưa đạt mức tối thiểu 14 TC)"
-                        : (totalCredits <= 25) ? " (Hợp lệ: 14 - 25 TC)" : " (Cảnh báo: Vượt quá 25 TC)";
+            String note;
+            if (totalCredits < 14) {
+                note = " (Cảnh báo: Chưa đạt mức tối thiểu 14 TC)";
+                lblRegisteredSummary.setForeground(new Color(204, 102, 0));
+            } else if (totalCredits <= 25) {
+                note = " (Hợp lệ: 14 - 25 TC)";
+                lblRegisteredSummary.setForeground(new Color(0, 153, 76));
+            } else {
+                note = " (Cảnh báo: Vượt quá 25 TC)";
+                lblRegisteredSummary.setForeground(new Color(204, 0, 0));
+            }
             lblRegisteredSummary.setText(String.format(
-                " Tổng số tín chỉ đã đăng ký: %d / %d TC%s | Số môn: %d",
-                totalCredits, s.getMaxCredits(), note, mySections.size()
+                " Tổng số tín chỉ đã đăng ký: %d TC%s | Số môn: %d",
+                totalCredits, note, mySections.size()
             ));
         } else {
             registeredTableModel.setSections(List.of());
