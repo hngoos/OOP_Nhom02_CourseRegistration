@@ -80,7 +80,7 @@ OOP_Nhom02_CourseRegistration/
 
 ### 3. THIẾT KẾ DỮ LIỆU & ĐẶC TẢ CA HỌC
 
-- **Lớp niên chế**: Mặc định cho lớp `D24CQAT01-N`.
+- **Lớp niên chế**: `D26CQAT01-N` (năm 1), `D25CQAT01-N` (năm 2) và `D24CQAT01-N` (năm 3).
 - **Cấu trúc bảng học phần**:
   `Lớp` | `Mã Môn` | `Tên Môn Học` | `Tín Chỉ` | `Khoa/Bộ Môn` | `Giảng Viên` | `Sĩ Số` | `Lịch Học & Phòng`
 - **Quy chuẩn ca học theo buổi**:
@@ -97,7 +97,9 @@ OOP_Nhom02_CourseRegistration/
   - `INT1154` - Tin học cơ sở 2: Thứ 2 (Tiết 7 - 10), Phòng Lab1-CNTT
   - `INT1339` (Lớp đầy sĩ số 1/1): Thứ 6 (Tiết 1 - 4), Phòng 102-A2
 
-Dữ liệu hiện có **15 môn học, 16 lớp học phần, 5 giảng viên**. Các môn bổ sung gồm Mạng máy tính, Hệ điều hành, Trí tuệ nhân tạo, Phát triển ứng dụng Web, Xác suất thống kê, Triết học Mác - Lênin và Kỹ năng làm việc nhóm.
+Dữ liệu hiện có **20 môn học, 21 lớp học phần, 5 giảng viên**. Năm môn chuyên ngành mới gồm Cơ sở an toàn thông tin (`INT1370`), Mật mã học cơ sở (`INT1372`), An toàn mạng máy tính (`INT1442`), Lập trình mạng (`INT1445`) và Đánh giá an toàn hệ thống (`INT1460`). Các môn có điều kiện tiên quyết tương ứng; đăng ký một môn trong học kỳ hiện tại không đồng nghĩa đã hoàn thành môn đó.
+
+Trong **Mục đăng ký**, chọn **Đăng ký theo kế hoạch** để xem các lớp thuộc khóa đang đăng nhập: năm 1 có 6 lớp, năm 2 có 7 lớp, năm 3 có 8 lớp. Chọn **Đăng ký môn nguyện vọng** để xem toàn bộ 21 lớp, kết hợp bộ lọc khoa/bộ môn và từ khóa. Cả hai chế độ đều kiểm tra sĩ số, trùng lịch, giới hạn tín chỉ và môn tiên quyết khi đăng ký. Nút **Xóa bộ lọc** đưa về chế độ theo kế hoạch.
 
 Ba tài khoản sinh viên mẫu là `N24DCAT001` (năm 3), `N25DCAT010` (năm 2) và `N26DCAT016` (năm 1). Mỗi tài khoản có giới hạn đăng ký 35 tín chỉ trong dữ liệu mẫu; giao diện cảnh báo khi chưa đủ 14 tín chỉ hoặc vượt 25 tín chỉ. `RegistrationService` vẫn chặn đăng ký vượt giới hạn riêng của từng sinh viên.
 
@@ -134,7 +136,8 @@ Script tạo JAR mới từ toàn bộ mã nguồn và icon, với manifest khai
 Thực hiện theo đúng quy trình 7 bước giảng viên yêu cầu trong thẻ đề bài:
 
 1. **Bước 1 - Đăng nhập Sinh viên**:
-   - Khi ứng dụng khởi động, chọn vai trò **Sinh viên** $\rightarrow$ chọn tài khoản sinh viên đã qua môn tiên quyết (ví dụ: `Nguyễn Văn A - N24DCAT001`) $\rightarrow$ bấm **Đăng nhập**.
+   - Khi ứng dụng khởi động, chọn vai trò **Sinh viên** $\rightarrow$ chọn `Trần Minh B - N25DCAT010` (đã hoàn thành `INT1154`) $\rightarrow$ bấm **Đăng nhập**.
+   - Chọn **Đăng ký môn nguyện vọng** để thấy cả môn năm 1 và năm 2 trong kịch bản dưới đây.
 2. **Bước 2 - Đăng ký thành công 3 môn học phần hợp lệ**:
    - Chọn môn `INT1340 - Cấu trúc dữ liệu` $\rightarrow$ bấm nút **Đăng ký học phần**.
    - Chọn môn `INT1339 - Cơ sở dữ liệu` $\rightarrow$ bấm nút **Đăng ký học phần**.
@@ -146,9 +149,11 @@ Thực hiện theo đúng quy trình 7 bước giảng viên yêu cầu trong th
 4. **Bước 4 - Demo bắt lỗi THIẾU TIÊN QUYẾT**:
    - Trên Toolbar, bấm nút **"Đổi tài khoản"**.
    - Chọn tài khoản sinh viên **chưa hoàn thành môn Tin học cơ sở 2**: `Lê Thị C - N26DCAT016`.
+   - Chọn lại **Đăng ký môn nguyện vọng** để thấy môn Lập trình hướng đối tượng thuộc năm 2.
    - Chọn môn `INT1332 - Lập trình hướng đối tượng`.
    - Bấm **Đăng ký học phần** $\rightarrow$ Hệ thống bung thông báo: `[PrerequisiteException]: Chưa thỏa mãn điều kiện tiên quyết cho môn 'INT1332'! Cần hoàn thành các môn: INT1154`.
 5. **Bước 5 - Xem Thời khóa biểu tự vẽ**:
+   - Đổi lại tài khoản `N25DCAT010` để xem các môn đã đăng ký ở bước 2.
    - Chuyển sang tab **"Thời Khóa Biểu Tuần"**: Quan sát lưới ma trận tuần 7 cột $\times$ 12 tiết được vẽ trực quan bằng `Graphics2D`. Môn học phủ trọn buổi (Tiết 1-4 hoặc Tiết 7-10), có màu sắc nổi bật, hiển thị tên môn, phòng học, tiết học.
 6. **Bước 6 - Xuất Thời khóa biểu ra ảnh PNG**:
    - Bấm nút **"Xuất TKB ra ảnh PNG"** $\rightarrow$ Chọn nơi lưu file trên máy $\rightarrow$ Kiểm tra file ảnh đã được xuất thành công, rõ nét.
@@ -156,4 +161,5 @@ Thực hiện theo đúng quy trình 7 bước giảng viên yêu cầu trong th
    - Trên Toolbar, bấm nút **"Biểu đồ thống kê"** $\rightarrow$ Cửa sổ `ChartWindow` mở ra gồm:
      - Tab 1: **BarChart** tỷ lệ lấp đầy các môn học phần theo Mã môn học.
      - Tab 2: **PieChart** phân bố số tín chỉ sinh viên đã đăng ký theo khối kiến thức.
+       Nhãn và tooltip hiển thị tên khoa, số tín chỉ và tỷ lệ phần trăm. Để xem dữ liệu của bước 2, đổi về `N25DCAT010` trước khi mở biểu đồ.
    - **Demo BONUS Giảng viên**: Bấm **"Đổi tài khoản"** $\rightarrow$ Chọn vai trò **Giảng viên** $\rightarrow$ Chọn giảng viên bất kỳ (ví dụ: `TS. Lê Văn Tuấn`) $\rightarrow$ Giao diện tự động chuyển đổi bằng nguyên lý **Đa hình (Polymorphism)** sang màn hình Quản lý lớp giảng dạy và xem danh sách sinh viên ghi danh trong lớp của giảng viên đó.
