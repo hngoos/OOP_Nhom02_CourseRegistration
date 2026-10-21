@@ -14,7 +14,7 @@
 
 ### 1. CÔNG NGHỆ & MÔI TRƯỜNG PHÁT TRIỂN
 
-- **Ngôn ngữ**: Java (JDK 17 trở lên, tối thiểu Java SE 11)
+- **Ngôn ngữ**: Java (JDK 17 trở lên để biên dịch; Java 17 trở lên để chạy JAR)
 - **Giao diện**: Java Swing (JFrame, JDialog, JTable, JPanel, Graphics2D)
 - **Biểu đồ**: JFreeChart 1.5.4 (`lib/jfreechart-1.5.4.jar`)
 - **IDE khuyến nghị**: Eclipse IDE (hoặc IntelliJ IDEA / NetBeans / VS Code)
@@ -70,7 +70,9 @@ OOP_Nhom02_CourseRegistration/
 │       │       └── LecturerViewStrategy.java      // Giao diện xem DS sinh viên cho Giảng viên (BONUS +5đ)
 │       └── util/
 │           └── ChartHelper.java                   // Tiện ích tạo BarChart & PieChart với font tiếng Việt
-├── OOP_Nhom02.jar                                 // File JAR thực thi chạy độc lập
+├── build.ps1                                     // Biên dịch Java 17 và đóng gói JAR
+├── run.bat                                       // Khởi động ứng dụng trên Windows
+├── OOP_Nhom02.jar                                 // JAR thực thi, dùng kèm thư mục lib/
 └── README.md
 ```
 
@@ -91,9 +93,13 @@ OOP_Nhom02_CourseRegistration/
   - `INT1332` - Lập trình hướng đối tượng (yêu cầu tiên quyết `INT1154`): Thứ 5 (Tiết 1 - 4), Phòng Lab3-CNTT
   - `INT1319` - Kiến trúc máy tính: Thứ 3 (Tiết 1 - 4), Phòng 204-A2 _(Trùng lịch sáng Thứ 3 với Cơ sở dữ liệu)_
   - `BAS1224` - Vật lý đại cương 1: Thứ 6 (Tiết 7 - 10), Phòng 202-A1
-  - `SKD1105` - Kỹ năng mềm: Thứ 7 (Tiết 1 - 4), Phòng Hội trường 2
+  - `SKD1105` - Kỹ năng thuyết trình: Thứ 7 (Tiết 1 - 4), Phòng Hội trường 2
   - `INT1154` - Tin học cơ sở 2: Thứ 2 (Tiết 7 - 10), Phòng Lab1-CNTT
   - `INT1339` (Lớp đầy sĩ số 1/1): Thứ 6 (Tiết 1 - 4), Phòng 102-A2
+
+Dữ liệu hiện có **15 môn học, 16 lớp học phần, 5 giảng viên**. Các môn bổ sung gồm Mạng máy tính, Hệ điều hành, Trí tuệ nhân tạo, Phát triển ứng dụng Web, Xác suất thống kê, Triết học Mác - Lênin và Kỹ năng làm việc nhóm.
+
+Ba tài khoản sinh viên mẫu là `N24DCAT001` (năm 3), `N25DCAT010` (năm 2) và `N26DCAT016` (năm 1). Mỗi tài khoản có giới hạn đăng ký 35 tín chỉ trong dữ liệu mẫu; giao diện cảnh báo khi chưa đủ 14 tín chỉ hoặc vượt 25 tín chỉ. `RegistrationService` vẫn chặn đăng ký vượt giới hạn riêng của từng sinh viên.
 
 ---
 
@@ -110,7 +116,16 @@ OOP_Nhom02_CourseRegistration/
    - Nhấn **Apply and Close**.
 5. Mở file `src/vn/edu/ptit/oop/nhom02/Main.java` $\rightarrow$ Chuột phải chọn **Run As** $\rightarrow$ **Java Application**.
 
-_(Hoặc chạy trực tiếp file JAR bằng dòng lệnh: `java -jar OOP_Nhom02.jar`)_
+### 4.1. BIÊN DỊCH VÀ CHẠY TRÊN WINDOWS
+
+Mở PowerShell tại thư mục gốc của dự án, với JDK 17 trở lên đã có trong `PATH`:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\build.ps1
+java -jar .\OOP_Nhom02.jar
+```
+
+Script tạo JAR mới từ toàn bộ mã nguồn và icon, với manifest khai báo `Class-Path: lib/jfreechart-1.5.4.jar`. Giữ thư mục `lib` cùng cấp với `OOP_Nhom02.jar` để chức năng biểu đồ hoạt động. Sau khi có JAR, có thể nhấp đúp `run.bat` để mở ứng dụng; không cần mở PowerShell đúng thư mục khi dùng `run.bat`.
 
 ---
 
@@ -124,13 +139,13 @@ Thực hiện theo đúng quy trình 7 bước giảng viên yêu cầu trong th
    - Chọn môn `INT1340 - Cấu trúc dữ liệu` $\rightarrow$ bấm nút **Đăng ký học phần**.
    - Chọn môn `INT1339 - Cơ sở dữ liệu` $\rightarrow$ bấm nút **Đăng ký học phần**.
    - Chọn môn `BAS1203 - Giải tích 1` $\rightarrow$ bấm nút **Đăng ký học phần**.
-   - Bảng kết quả bên dưới và thanh trạng thái (Status bar) ở đáy cập nhật tổng số tín chỉ hiện có (9 / 24 TC).
+   - Bảng kết quả bên dưới và thanh trạng thái (Status bar) ở đáy cập nhật tổng số tín chỉ hiện có (9 TC, kèm cảnh báo chưa đạt mức tối thiểu 14 TC).
 3. **Bước 3 - Demo bắt lỗi TRÙNG LỊCH HỌC**:
    - Chọn môn `INT1319 - Kiến trúc máy tính` (học Thứ 3 Tiết 1 - 4, trùng ca sáng Thứ 3 với môn Cơ sở dữ liệu vừa đăng ký).
    - Bấm nút **Đăng ký học phần** $\rightarrow$ Hệ thống bắt ngoại lệ và bung thông báo: `[ScheduleConflictException]: Trùng lịch học! Lớp 'HP05' bị trùng thời gian với lớp 'HP02' đã đăng ký`.
 4. **Bước 4 - Demo bắt lỗi THIẾU TIÊN QUYẾT**:
    - Trên Toolbar, bấm nút **"Đổi tài khoản"**.
-   - Chọn tài khoản sinh viên **chưa hoàn thành môn Tin học cơ sở 2** (ví dụ: `Trần Minh B - N24DCAT010`).
+   - Chọn tài khoản sinh viên **chưa hoàn thành môn Tin học cơ sở 2**: `Lê Thị C - N26DCAT016`.
    - Chọn môn `INT1332 - Lập trình hướng đối tượng`.
    - Bấm **Đăng ký học phần** $\rightarrow$ Hệ thống bung thông báo: `[PrerequisiteException]: Chưa thỏa mãn điều kiện tiên quyết cho môn 'INT1332'! Cần hoàn thành các môn: INT1154`.
 5. **Bước 5 - Xem Thời khóa biểu tự vẽ**:
