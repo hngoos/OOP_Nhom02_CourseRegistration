@@ -12,6 +12,8 @@ import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.labels.StandardPieToolTipGenerator;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
@@ -91,7 +93,7 @@ public class ChartHelper {
             dataset.setValue("Chưa đăng ký môn nào", 1);
         } else {
             for (Map.Entry<String, Integer> entry : facultyCredits.entrySet()) {
-                dataset.setValue(entry.getKey() + " (" + entry.getValue() + " TC)", entry.getValue());
+                dataset.setValue(entry.getKey(), entry.getValue());
             }
         }
 
@@ -104,9 +106,17 @@ public class ChartHelper {
                 false
         );
 
-        PiePlot<?> plot = (PiePlot<?>) chart.getPlot();
+        @SuppressWarnings("unchecked")
+        PiePlot<String> plot = (PiePlot<String>) chart.getPlot();
         plot.setBackgroundPaint(new Color(248, 250, 252));
         plot.setOutlineVisible(false);
+
+        // Hiển thị rõ ràng tên khoa, số tín chỉ và phần trăm chính xác (Ví dụ: CNTT: 9 TC (60.0%))
+        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}: {1} TC ({2})"));
+        plot.setLabelFont(new Font("Segoe UI", Font.BOLD, 12));
+
+        // Tooltip khi rê chuột không còn bị dấu phẩy dính số (Ví dụ: CNTT: 9 TC - Chiếm 60%)
+        plot.setToolTipGenerator(new StandardPieToolTipGenerator("{0}: {1} TC - Chiếm {2} tổng số tín chỉ"));
 
         return chart;
     }
