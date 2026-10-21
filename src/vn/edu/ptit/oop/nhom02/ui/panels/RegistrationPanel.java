@@ -235,12 +235,12 @@ public class RegistrationPanel extends JPanel {
             int totalCredits = registrationService.calculateEnrolledCredits(student, registeredList);
             if (totalCredits > 25) {
                 JOptionPane.showMessageDialog(this,
-                    "Đăng ký thành công lớp '" + sectionToEnroll.getSectionId() + "' - " + sectionToEnroll.getCourse().getName() + "!\n" +
+                    "Đăng ký thành công môn '" + sectionToEnroll.getCourse().getCode() + " - " + sectionToEnroll.getCourse().getName() + "!\n" +
                     "⚠️ CẢNH BÁO: Tổng số tín chỉ hiện tại là " + totalCredits + " TC (Vượt quá giới hạn tối đa 25 TC theo quy chế)!",
                     "Cảnh báo học vụ", JOptionPane.WARNING_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(this,
-                    "Đăng ký thành công lớp '" + sectionToEnroll.getSectionId() + "' - " + sectionToEnroll.getCourse().getName() + "!",
+                    "Đăng ký thành công môn '" + sectionToEnroll.getCourse().getCode() + " - " + sectionToEnroll.getCourse().getName() + "!",
                     "Thành công", JOptionPane.INFORMATION_MESSAGE);
             }
 
@@ -269,7 +269,7 @@ public class RegistrationPanel extends JPanel {
         if (sectionToDrop == null) return;
 
         int confirm = JOptionPane.showConfirmDialog(this,
-            "Bạn có chắc chắn muốn hủy đăng ký lớp '" + sectionToDrop.getSectionId() + "'?",
+            "Bạn có chắc chắn muốn hủy đăng ký môn '" + sectionToDrop.getCourse().getCode() + " - " + sectionToDrop.getCourse().getName() + "'?",
             "Xác nhận hủy môn", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {

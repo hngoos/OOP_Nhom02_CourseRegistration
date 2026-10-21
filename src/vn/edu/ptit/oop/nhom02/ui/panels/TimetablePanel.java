@@ -252,7 +252,7 @@ public class TimetablePanel extends JPanel {
                     currentTextY += 15;
 
                     g2.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-                    g2.drawString("Lớp: " + sec.getSectionId(), x + 6, currentTextY);
+                    g2.drawString("Mã môn: " + sec.getCourse().getCode(), x + 6, currentTextY);
                     currentTextY += 14;
 
                     g2.drawString("Phòng: " + slot.getRoom(), x + 6, currentTextY);

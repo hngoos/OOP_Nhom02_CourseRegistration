@@ -166,6 +166,6 @@ public class ClassSection implements Serializable {
 
     @Override
     public String toString() {
-        return sectionId + " - " + course.getName() + " (" + getEnrolledCount() + "/" + capacity + ")";
+        return course.getCode() + " - " + course.getName() + " (" + getEnrolledCount() + "/" + capacity + ")";
     }
 }

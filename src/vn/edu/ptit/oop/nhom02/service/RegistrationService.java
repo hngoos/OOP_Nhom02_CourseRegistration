@@ -37,16 +37,16 @@ public class RegistrationService {
         }
 
         if (registeredSections.contains(targetSection)) {
-            throw new RegistrationException("Sinh viên đã đăng ký lớp học phần '" + targetSection.getSectionId() + "' này rồi!");
+            throw new RegistrationException("Sinh viên đã đăng ký môn '" + targetSection.getCourse().getCode() + "' này rồi!");
         }
 
         if (targetSection.isFull()) {
-            throw new SectionFullException(targetSection.getSectionId(), targetSection.getCapacity());
+            throw new SectionFullException(targetSection.getCourse().getCode(), targetSection.getCapacity());
         }
 
         for (ClassSection sec : registeredSections) {
             if (sec.getCourse().getCode().equalsIgnoreCase(targetSection.getCourse().getCode())) {
-                throw new RegistrationException("Sinh viên đã đăng ký môn '" + targetSection.getCourse().getName() + "' ở lớp khác (" + sec.getSectionId() + ")!");
+                throw new RegistrationException("Sinh viên đã đăng ký môn '" + targetSection.getCourse().getCode() + " - " + targetSection.getCourse().getName() + "' ở lớp khác rồi!");
             }
         }
 
@@ -57,7 +57,7 @@ public class RegistrationService {
                         String conflictDetail = String.format("%s, Tiết %d-%d trùng với %s, Tiết %d-%d",
                                 mySlot.getDayOfWeekString(), mySlot.getStartPeriod(), mySlot.getEndPeriod(),
                                 otherSlot.getDayOfWeekString(), otherSlot.getStartPeriod(), otherSlot.getEndPeriod());
-                        throw new ScheduleConflictException(targetSection.getSectionId(), registeredSec.getSectionId(), conflictDetail);
+                        throw new ScheduleConflictException(targetSection.getCourse().getCode(), registeredSec.getCourse().getCode(), conflictDetail);
                     }
                 }
             }
