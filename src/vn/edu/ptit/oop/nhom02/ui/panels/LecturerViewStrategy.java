@@ -112,7 +112,7 @@ public class LecturerViewStrategy implements RoleViewStrategy {
             ClassSection sec = taughtSectionsModel.getSectionAt(selectedRow);
             if (sec != null) {
                 lblStudentsHeader.setText(String.format(" Danh sách sinh viên lớp: %s - %s (%d / %d sinh viên)",
-                        sec.getSectionId(), sec.getCourse().getName(), sec.getEnrolledCount(), sec.getCapacity()));
+                        sec.getCourse().getCode(), sec.getCourse().getName(), sec.getEnrolledCount(), sec.getCapacity()));
 
                 for (Student st : sec.getEnrolledStudents()) {
                     studentListModel.addRow(new Object[]{

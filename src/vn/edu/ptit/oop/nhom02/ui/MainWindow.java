@@ -46,10 +46,10 @@ public class MainWindow extends BaseWindow {
         loginDialog.setVisible(true);
 
         if (!loginDialog.isConfirmed() || loginDialog.getSelectedPerson() == null) {
-            currentUser = repository.findAllStudents().get(0);
-        } else {
-            currentUser = loginDialog.getSelectedPerson();
+            System.exit(0);
+            return;
         }
+        currentUser = loginDialog.getSelectedPerson();
 
         addToolButton("Đổi tài khoản", "/resources/icons/login.png", "Đổi tài khoản đăng nhập (Sinh viên/Giảng viên)", e -> switchUser());
         addToolButton("Biểu đồ thống kê", "/resources/icons/chart.png", "Xem biểu đồ thống kê JFreeChart", e -> openChartWindow());
