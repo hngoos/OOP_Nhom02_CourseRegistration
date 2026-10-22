@@ -3,6 +3,7 @@ package vn.edu.ptit.oop.nhom02.util;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.jfree.chart.ChartFactory;
@@ -39,14 +40,20 @@ public class ChartHelper {
 
     public static JFreeChart createFillRateBarChart(List<ClassSection> sections) {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        Map<String, long[]> courseTotals = new LinkedHashMap<>();
 
         if (sections != null) {
             for (ClassSection sec : sections) {
-                double fillPercent = (sec.getCapacity() > 0)
-                        ? ((double) sec.getEnrolledCount() / sec.getCapacity()) * 100.0
-                        : 0.0;
-                dataset.addValue(fillPercent, "Tỷ lệ lấp đầy (%)", sec.getCourse().getCode());
+                long[] totals = courseTotals.computeIfAbsent(sec.getCourse().getCode(), code -> new long[2]);
+                totals[0] += sec.getEnrolledCount();
+                totals[1] += sec.getCapacity();
             }
+        }
+
+        for (Map.Entry<String, long[]> entry : courseTotals.entrySet()) {
+            long[] totals = entry.getValue();
+            double fillPercent = totals[1] > 0 ? 100.0 * totals[0] / totals[1] : 0.0;
+            dataset.addValue(fillPercent, "Tỷ lệ lấp đầy (%)", entry.getKey());
         }
 
         JFreeChart chart = ChartFactory.createBarChart(
