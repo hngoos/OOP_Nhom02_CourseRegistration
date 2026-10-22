@@ -118,6 +118,8 @@ Ba tài khoản sinh viên mẫu là `N24DCAT001` (năm 3), `N25DCAT010` (năm 2
    - Nhấn **Apply and Close**.
 5. Mở file `src/vn/edu/ptit/oop/nhom02/Main.java` $\rightarrow$ Chuột phải chọn **Run As** $\rightarrow$ **Java Application**.
 
+Dự án đặt mức biên dịch Java 17. Trong **Java Build Path**, dùng JDK hỗ trợ JavaSE-17 và thư viện JFreeChart; không thêm `OOP_Nhom02.jar` của chính dự án vào classpath. Nếu Eclipse còn báo lỗi sau khi cập nhật source, chọn **Project → Clean** để biên dịch lại.
+
 ### 4.1. BIÊN DỊCH VÀ CHẠY TRÊN WINDOWS
 
 Mở PowerShell tại thư mục gốc của dự án, với JDK 17 trở lên đã có trong `PATH`:
@@ -159,7 +161,16 @@ Thực hiện theo đúng quy trình 7 bước giảng viên yêu cầu trong th
    - Bấm nút **"Xuất TKB ra ảnh PNG"** $\rightarrow$ Chọn nơi lưu file trên máy $\rightarrow$ Kiểm tra file ảnh đã được xuất thành công, rõ nét.
 7. **Bước 7 - Mở Biểu đồ JFreeChart & Demo Chế độ Giảng viên (BONUS +5đ)**:
    - Trên Toolbar, bấm nút **"Biểu đồ thống kê"** $\rightarrow$ Cửa sổ `ChartWindow` mở ra gồm:
-     - Tab 1: **BarChart** tỷ lệ lấp đầy các môn học phần theo Mã môn học.
+     - Tab 1: **BarChart** tỷ lệ lấp đầy theo mã môn học: tổng sinh viên ghi danh ở các lớp của môn / tổng sức chứa các lớp × 100%. Ví dụ môn Cơ sở dữ liệu có hai lớp với sĩ số 1/60 và 1/1 thì hiển thị 2/61 ≈ 3,28%, không ghi đè thành 100% từ lớp cuối.
      - Tab 2: **PieChart** phân bố số tín chỉ sinh viên đã đăng ký theo khối kiến thức.
        Nhãn và tooltip hiển thị tên khoa, số tín chỉ và tỷ lệ phần trăm. Để xem dữ liệu của bước 2, đổi về `N25DCAT010` trước khi mở biểu đồ.
    - **Demo BONUS Giảng viên**: Bấm **"Đổi tài khoản"** $\rightarrow$ Chọn vai trò **Giảng viên** $\rightarrow$ Chọn giảng viên bất kỳ (ví dụ: `TS. Lê Văn Tuấn`) $\rightarrow$ Giao diện tự động chuyển đổi bằng nguyên lý **Đa hình (Polymorphism)** sang màn hình Quản lý lớp giảng dạy và xem danh sách sinh viên ghi danh trong lớp của giảng viên đó.
+
+### 6. QUY TRÌNH ĐÓNG GÓP CỦA THÀNH VIÊN
+
+1. Mỗi thành viên dùng nhánh được phân công và chọn đúng nhánh trước khi upload trên GitHub.
+2. Trong thư mục phân chia của mình, kéo **chỉ thư mục `src`** vào **Add file → Upload files** tại gốc repository. Giữ nguyên các thư mục package bên trong `src`.
+3. Các file `.java` nằm rời cùng cấp `src` là bản để đọc, không upload thêm vào gốc repo. Các file hướng dẫn và RAR dùng để trao đổi trong nhóm.
+4. Tạo Pull Request từ nhánh cá nhân vào `main`; nhóm trưởng kiểm tra và merge. Không upload toàn bộ dự án cũ để thay thế `main`.
+
+Mỗi phần chia chỉ chứa các class được giao, cần tích hợp vào dự án đầy đủ để chạy. Khi có thay đổi chung, đối chiếu với source mới trước khi upload để tránh đưa lại phiên bản cũ. Sau khi tích hợp, chạy `build.ps1` để JAR khớp source.
