@@ -139,6 +139,7 @@ Thực hiện theo đúng quy trình 7 bước giảng viên yêu cầu trong th
 
 1. **Bước 1 - Đăng nhập Sinh viên**:
    - Khi ứng dụng khởi động, chọn vai trò **Sinh viên** $\rightarrow$ chọn `Trần Minh B - N25DCAT010` (đã hoàn thành `INT1154`) $\rightarrow$ bấm **Đăng nhập**.
+   - Nếu đóng hộp đăng nhập bằng dấu X hoặc bấm **Thoát** lúc khởi động, ứng dụng kết thúc; chỉ mở màn hình chính sau khi đăng nhập thành công.
    - Chọn **Đăng ký môn nguyện vọng** để thấy cả môn năm 1 và năm 2 trong kịch bản dưới đây.
 2. **Bước 2 - Đăng ký thành công 3 môn học phần hợp lệ**:
    - Chọn môn `INT1340 - Cấu trúc dữ liệu` $\rightarrow$ bấm nút **Đăng ký học phần**.
